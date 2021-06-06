@@ -1,9 +1,19 @@
 pipeline {
-    agent { docker 'maven:3.3.3' }
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
+    }
     stages {
-        stage('build') {
+        stage('pull code') {
             steps {
-                sh 'mvn --version'
+                git credentialsId: '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', url: 'https://github.com/kobe1314/situationAnalysis.git'
+         }
+      }
+        stage('Build') { 
+            steps {
+                sh 'mvn -B -DskipTests clean package' 
             }
         }
     }
